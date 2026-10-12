@@ -16,14 +16,16 @@ import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import Maintenance from './pages/Maintenance';
 
+import Logo from './components/Logo';
+
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-900">
         <div className="text-center">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl mx-auto mb-4 animate-pulse">
-            A
+          <div className="w-16 h-16 mx-auto mb-4 animate-pulse">
+            <Logo size={64} variant="white" />
           </div>
           <p className="text-slate-400 text-sm">Loading...</p>
         </div>

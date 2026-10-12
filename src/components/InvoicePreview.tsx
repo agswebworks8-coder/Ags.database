@@ -2,6 +2,7 @@ import React from 'react';
 import type { Invoice, Client, BusinessSettings } from '../lib/types';
 import { X, Download, Printer, Eye } from 'lucide-react';
 import { generateInvoicePDF } from '../lib/pdfGenerator';
+import Logo from './Logo';
 
 interface InvoicePreviewProps {
   invoice: Invoice;
@@ -60,8 +61,8 @@ export default function InvoicePreview({ invoice, client, settings, onClose }: I
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 text-white mb-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center">
-                  <span className="text-blue-600 font-bold text-2xl">A</span>
+                <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center overflow-hidden">
+                  <Logo size={56} variant="default" />
                 </div>
                 <div>
                   <h1 className="text-xl font-bold">{settings.companyName}</h1>

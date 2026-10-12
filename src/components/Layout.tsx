@@ -7,6 +7,7 @@ import {
   TrendingDown, UserCog, FolderOpen, BarChart3, Bell, Settings,
   Wrench, LogOut, Menu, X, Moon, Sun, ChevronDown, Search
 } from 'lucide-react';
+import Logo from './Logo';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard, roles: ['ceo', 'developer', 'accountant'] },
@@ -68,9 +69,7 @@ export default function Layout() {
         {/* Logo */}
         <div className={`p-5 border-b ${darkMode ? 'border-slate-700' : 'border-gray-200'}`}>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
-              A
-            </div>
+            <Logo size={40} variant={darkMode ? 'white' : 'default'} />
             <div>
               <h1 className={`font-bold text-sm ${darkMode ? 'text-white' : 'text-gray-900'}`}>AGS WEBWORKS</h1>
               <p className={`text-xs ${darkMode ? 'text-slate-400' : 'text-gray-500'}`}>Management System</p>

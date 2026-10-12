@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 import { Lock, Mail, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import Logo from '../components/Logo';
 
 export default function Login() {
   const { login } = useAuth();
@@ -33,8 +34,8 @@ export default function Login() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4 shadow-2xl shadow-blue-500/30">
-            A
+          <div className="w-20 h-20 mx-auto mb-4 shadow-2xl shadow-blue-500/30">
+            <Logo size={80} variant="white" />
           </div>
           <h1 className="text-2xl font-bold text-white">AGS WEBWORKS</h1>
           <p className="text-blue-200 mt-1">Business Management System</p>

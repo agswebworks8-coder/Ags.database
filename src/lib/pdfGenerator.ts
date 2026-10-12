@@ -125,13 +125,25 @@ function generatePDF({ invoice, client, settings }: InvoicePDFData): void {
   doc.rect(pageWidth / 2, 0, pageWidth / 2, 45, 'F');
   doc.setGState(new (doc as any).GState({ opacity: 1 }));
 
-  // Company logo circle
+  // Company logo - circular with AGS text
   setFillColor(doc, BRAND.white);
   doc.circle(margin + 12, 22, 10, 'F');
+  
+  // Draw logo border
+  doc.setDrawColor(BRAND.primary[0], BRAND.primary[1], BRAND.primary[2]);
+  doc.setLineWidth(0.5);
+  doc.circle(margin + 12, 22, 10, 'S');
+  
+  // AGS text in logo
   setTextColor(doc, BRAND.primary);
-  doc.setFontSize(18);
+  doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
-  doc.text('A', margin + 12, 26, { align: 'center' });
+  doc.text('AGS', margin + 12, 21, { align: 'center' });
+  
+  // WEBWORKS text
+  doc.setFontSize(4);
+  doc.setFont('helvetica', 'bold');
+  doc.text('WEBWORKS', margin + 12, 25, { align: 'center' });
 
   // Company name
   setTextColor(doc, BRAND.white);
