@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../lib/auth';
 import * as store from '../lib/store';
 import type { Payment, Invoice, PaymentMethod, PaymentStatus } from '../lib/types';
-import { Plus, X, FileText, Download, CreditCard, DollarSign, TrendingUp } from 'lucide-react';
+import { Plus, X, FileText, Download, CreditCard, DollarSign, TrendingUp, Eye, Printer } from 'lucide-react';
+import { generateInvoicePDF, generatePaymentReceipt, generateMaintenanceReport } from '../lib/pdfGenerator';
+import InvoicePreview from '../components/InvoicePreview';
 
 export default function Payments() {
   const { user } = useAuth();
@@ -12,6 +14,7 @@ export default function Payments() {
   const [activeTab, setActiveTab] = useState<'payments' | 'invoices'>('payments');
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [showInvoiceForm, setShowInvoiceForm] = useState(false);
+  const [previewInvoice, setPreviewInvoice] = useState<Invoice | null>(null);
 
   useEffect(() => {
     setPayments(store.getPayments());
@@ -45,12 +48,15 @@ export default function Payments() {
           <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Payments & Invoices</h1>
           <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-gray-500'}`}>Financial tracking & billing</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <button onClick={() => setShowPaymentForm(true)} className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">
             <Plus size={16} /> Record Payment
           </button>
           <button onClick={() => setShowInvoiceForm(true)} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
             <FileText size={16} /> Create Invoice
+          </button>
+          <button onClick={() => generateMaintenanceReport()} className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm">
+            <Download size={16} /> Report
           </button>
         </div>
       </div>
@@ -173,9 +179,29 @@ export default function Payments() {
                         </td>
                         <td className={`py-3 px-2 ${isDark ? 'text-slate-300' : 'text-gray-700'}`}>{inv.dueDate}</td>
                         <td className="py-3 px-2">
-                          <button className="text-blue-500 hover:text-blue-600 text-xs flex items-center gap-1">
-                            <Download size={12} /> PDF
-                          </button>
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => setPreviewInvoice(inv)}
+                              className="text-purple-500 hover:text-purple-600 text-xs flex items-center gap-1 px-2 py-1 rounded hover:bg-purple-50 dark:hover:bg-purple-900/20"
+                              title="Preview"
+                            >
+                              <Eye size={12} />
+                            </button>
+                            <button
+                              onClick={() => generateInvoicePDF(inv.id)}
+                              className="text-blue-500 hover:text-blue-600 text-xs flex items-center gap-1 px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                              title="Download PDF"
+                            >
+                              <Download size={12} /> PDF
+                            </button>
+                            <button
+                              onClick={() => generateInvoicePDF(inv.id)}
+                              className="text-gray-500 hover:text-gray-700 text-xs p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700"
+                              title="Print"
+                            >
+                              <Printer size={12} />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -212,6 +238,21 @@ export default function Payments() {
           </div>
         </div>
       )}
+
+      {/* Invoice Preview */}
+      {previewInvoice && (() => {
+        const client = store.getClient(previewInvoice.clientId);
+        const settings = store.getSettings();
+        if (!client) return null;
+        return (
+          <InvoicePreview
+            invoice={previewInvoice}
+            client={client}
+            settings={settings}
+            onClose={() => setPreviewInvoice(null)}
+          />
+        );
+      })()}
     </div>
   );
 }

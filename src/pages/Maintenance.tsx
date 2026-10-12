@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../lib/auth';
 import * as store from '../lib/store';
 import type { MaintenancePlan, MaintenanceSubscription, MaintenanceTicket, SubscriptionStatus, MaintenancePlanType, Priority } from '../lib/types';
-import { Plus, X, Wrench, DollarSign, Users, Clock, AlertTriangle, Edit2, FileText } from 'lucide-react';
+import { Plus, X, Wrench, DollarSign, Users, Clock, AlertTriangle, Edit2, FileText, Download } from 'lucide-react';
+import { generateMaintenanceInvoicePDF, generateMaintenanceReport } from '../lib/pdfGenerator';
 
 export default function Maintenance() {
   const { user } = useAuth();
@@ -49,7 +50,7 @@ export default function Maintenance() {
           <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Website Maintenance</h1>
           <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-gray-500'}`}>Manage subscriptions, billing, and support</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           {user?.role !== 'developer' && (
             <button onClick={() => setShowSubForm(true)} className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
               <Plus size={16} /> New Subscription
@@ -57,6 +58,9 @@ export default function Maintenance() {
           )}
           <button onClick={() => setShowTicketForm(true)} className="flex items-center gap-2 px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm">
             <Plus size={16} /> New Ticket
+          </button>
+          <button onClick={() => generateMaintenanceReport()} className="flex items-center gap-2 px-3 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm">
+            <Download size={16} /> Report PDF
           </button>
         </div>
       </div>
@@ -173,6 +177,7 @@ export default function Maintenance() {
                     <th className={`text-left py-3 px-2 font-medium ${isDark ? 'text-slate-300' : 'text-gray-600'}`}>Price/mo</th>
                     <th className={`text-left py-3 px-2 font-medium ${isDark ? 'text-slate-300' : 'text-gray-600'}`}>Status</th>
                     <th className={`text-left py-3 px-2 font-medium ${isDark ? 'text-slate-300' : 'text-gray-600'}`}>Next Billing</th>
+                    <th className={`text-left py-3 px-2 font-medium ${isDark ? 'text-slate-300' : 'text-gray-600'}`}>Action</th>
                   </tr>
                 </thead>
                 <tbody className={`divide-y ${isDark ? 'divide-slate-700' : 'divide-gray-100'}`}>
@@ -189,6 +194,14 @@ export default function Maintenance() {
                           <span className={`text-xs px-2 py-0.5 rounded-full ${statusColors[sub.status]}`}>{statusLabels[sub.status]}</span>
                         </td>
                         <td className={`py-3 px-2 ${isDark ? 'text-slate-300' : 'text-gray-700'}`}>{sub.nextBillingDate || '-'}</td>
+                        <td className="py-3 px-2">
+                          <button
+                            onClick={() => generateMaintenanceInvoicePDF(sub.id, sub.nextBillingDate || new Date().toISOString().split('T')[0])}
+                            className="text-xs text-blue-500 hover:text-blue-600 flex items-center gap-1 px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                          >
+                            <Download size={12} /> Invoice
+                          </button>
+                        </td>
                       </tr>
                     );
                   })}

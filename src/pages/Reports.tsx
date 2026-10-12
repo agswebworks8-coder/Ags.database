@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../lib/auth';
 import * as store from '../lib/store';
-import { BarChart3, Download, TrendingUp, Users, ShoppingCart, DollarSign } from 'lucide-react';
+import { BarChart3, Download, TrendingUp, Users, ShoppingCart, DollarSign, FileText } from 'lucide-react';
+import { generateMaintenanceReport } from '../lib/pdfGenerator';
 
 export default function Reports() {
   const { user } = useAuth();
@@ -52,9 +53,14 @@ export default function Reports() {
           <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>Reports & Analytics</h1>
           <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-gray-500'}`}>Business performance insights</p>
         </div>
-        <button onClick={handleExport} className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">
-          <Download size={16} /> Export CSV
-        </button>
+        <div className="flex gap-2">
+          <button onClick={handleExport} className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">
+            <Download size={16} /> Export CSV
+          </button>
+          <button onClick={() => generateMaintenanceReport()} className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm">
+            <FileText size={16} /> PDF Report
+          </button>
+        </div>
       </div>
 
       {/* Date Filter */}
